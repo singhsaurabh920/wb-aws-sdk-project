@@ -7,12 +7,12 @@ import org.worldbuild.project.utils.ScreteManagerUtils;
 
 @Log4j2
 @SpringBootApplication
-public class WbAwsSdkProjectApplication {
+public class AwsSdkApplication {
 
 	public static void main(String[] args) {
 		ScreteManagerUtils.getSecretV1();
 		//ScreteManagerUtils.getSecretV2();
-		SpringApplication.run(WbAwsSdkProjectApplication.class, args);
+		SpringApplication.run(AwsSdkApplication.class, args);
 	}
 
 }
