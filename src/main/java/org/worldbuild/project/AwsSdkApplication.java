@@ -10,8 +10,8 @@ import org.worldbuild.project.utils.ScreteManagerUtils;
 public class AwsSdkApplication {
 
 	public static void main(String[] args) {
-		ScreteManagerUtils.getSecretV1();
-		//ScreteManagerUtils.getSecretV2();
+		//ScreteManagerUtils.getSecretV1();
+		ScreteManagerUtils.getSecretV2();
 		SpringApplication.run(AwsSdkApplication.class, args);
 	}
 

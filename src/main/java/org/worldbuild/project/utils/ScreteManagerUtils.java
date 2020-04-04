@@ -1,9 +1,9 @@
 package org.worldbuild.project.utils;
 
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
-import com.amazonaws.services.secretsmanager.model.*;
 import lombok.extern.log4j.Log4j2;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+import software.amazon.awssdk.services.secretsmanager.model.*;
 
 import java.security.InvalidParameterException;
 import java.util.Base64;
@@ -11,7 +11,7 @@ import java.util.Base64;
 @Log4j2
 public class ScreteManagerUtils {
 
-    public static String getSecretV1() {
+    /*public static String getSecretV1() {
         String secretName = "prod/gps/db";
         String region = "ap-south-1";
         // Create a Secrets Manager client
@@ -53,8 +53,9 @@ public class ScreteManagerUtils {
         }
         log.info(secret);
         return secret;
-    }
-	/*public static String getSecretV2() {
+    }*/
+
+	public static String getSecretV2() {
 		String secretName = "prod/gps/db";
 		String region = "ap-south-1";
 		SecretsManagerClient client = SecretsManagerClient.builder().region(Region.of(region)).build();
@@ -74,6 +75,6 @@ public class ScreteManagerUtils {
 		}
 		String secret=response.secretString();
 		log.info(secret);
-		return secret
-	}*/
+		return secret;
+	}
 }
