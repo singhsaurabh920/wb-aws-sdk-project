@@ -1,4 +1,4 @@
-package org.worldbuild.project.aws.utils;
+package org.worldbuild.aws.utils;
 
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;

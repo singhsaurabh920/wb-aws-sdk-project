@@ -1,11 +1,10 @@
-package org.worldbuild.project.aws.service;
+package org.worldbuild.aws.service;
 
 import java.util.Map;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.sns.AmazonSNS;

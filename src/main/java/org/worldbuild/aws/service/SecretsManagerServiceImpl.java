@@ -1,7 +1,6 @@
-package org.worldbuild.project.aws.service;
+package org.worldbuild.aws.service;
 
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
 import lombok.extern.log4j.Log4j2;

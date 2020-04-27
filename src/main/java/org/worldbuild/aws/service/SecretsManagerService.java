@@ -1,4 +1,4 @@
-package org.worldbuild.project.aws.service;
+package org.worldbuild.aws.service;
 
 public interface SecretsManagerService {
 
