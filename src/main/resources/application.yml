@@ -9,6 +9,11 @@ server:
 spring:
   mvc:
     throw-exception-if-no-handler-found: true
+  security:
+    user:
+      name: root
+      password: root
+      roles: ADMIN
   profiles:
     active: dev
     #active: prod
