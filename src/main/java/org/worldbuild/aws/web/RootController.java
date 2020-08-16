@@ -16,19 +16,19 @@ import javax.servlet.http.HttpServletResponse;
 public class RootController {
 
 
-    @RequestMapping("/intex1.html")
+    @RequestMapping(value = {"/", "/index1.html"})
     public String index1HandlerView(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
         modelMap.addAttribute("pageName",PageViewDetail.DASHBOARD_V1.pageName);
         return PageViewDetail.DASHBOARD_V1.path;
     }
 
-    @RequestMapping("/intex2.html")
+    @RequestMapping("/index2.html")
     public String index2HandlerView(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
         modelMap.addAttribute("pageName",PageViewDetail.DASHBOARD_V2.pageName);
         return PageViewDetail.DASHBOARD_V2.path;
     }
 
-    @RequestMapping("/intex3.html")
+    @RequestMapping("/index3.html")
     public String index3HandlerView(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
         modelMap.addAttribute("pageName",PageViewDetail.DASHBOARD_V3.pageName);
         return PageViewDetail.DASHBOARD_V3.path;
