@@ -9,6 +9,13 @@ server:
 spring:
   mvc:
     throw-exception-if-no-handler-found: true
+  thymeleaf:
+    enabled: true
+    encoding: utf-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
   security:
     user:
       name: root
