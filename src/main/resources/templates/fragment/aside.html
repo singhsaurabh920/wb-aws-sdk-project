@@ -25,9 +25,9 @@
         </div>
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column text-sm" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item has-treeview" th:classappend="${pageName.contains('Dashboard')} ? menu-open : ''">
-                    <a href="#" class="nav-link active" th:classappend="${pageName.contains('Dashboard')} ? acive : ''">
+                    <a href="#" class="nav-link" th:classappend="${pageName.contains('Dashboard')} ? active : ''">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Dashboard
@@ -54,6 +54,14 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+                <li class="nav-item" th:classappend="${pageName.equals('Gallery')} ? acive : ''">
+                    <a href="gallery.html" class="nav-link" th:classappend="${pageName.equals('Gallery')} ? active : ''">
+                        <i class="nav-icon far fa-image"></i>
+                        <p>
+                            Gallery
+                        </p>
+                    </a>
                 </li>
             </ul>
         </nav>
