@@ -5,9 +5,12 @@ import com.amazonaws.services.simpleemail.model.RawMessage;
 import com.amazonaws.services.simpleemail.model.SendRawEmailRequest;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
+import org.worldbuild.core.modal.EmailModal;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -27,62 +30,62 @@ import java.util.Properties;
 @Log4j2
 @Service
 public class EmailServiceImpl implements EmailService{
-
     private static final String CONFIGURATION_SET = "ConfigSet";
-    private static final String SENDER = "singhsaurabh920@gmail.com";
-    private static final String RECIPIENT = "savitasinghkhanpur@gmail.com";
-    //
-    private static final String SUBJECT = "WB Sample Doc ";
-    private static final String ATTACHMENT = "/home/insight/Downloads/Saurabh_Summary.xlsx";
-
 
     @Autowired
     @Qualifier("awsSimpleEmailService")
     private AmazonSimpleEmailService amazonSimpleEmailService;
 
-
-    private static String BODY_TEXT = "Hello,\r\n"
-            + "Please see the attached file for a list "
-            + "of customers to contact.";
-
-    private static String BODY_HTML = "<html>"
-            + "<head></head>"
-            + "<body>"
-            + "<h1>Hello!</h1>"
-            + "<p>Please see the attached file for a "
-            + "list of customers to contact.</p>"
-            + "</body>"
-            + "</html>";
-
     @Override
-    public void sendEmail() throws MessagingException, IOException {
+    public void sendEmail(EmailModal emailModal) throws MessagingException {
         Session session = Session.getDefaultInstance(new Properties());
         MimeMessage message = new MimeMessage(session);
-        message.setSubject(SUBJECT, "UTF-8");
-        message.setFrom(new InternetAddress(SENDER));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(RECIPIENT));
-        MimeMultipart msg_body = new MimeMultipart("alternative");
-        MimeBodyPart wrap = new MimeBodyPart();
+        message.setSubject(emailModal.getSubject(), "UTF-8");
+        message.setFrom(new InternetAddress(emailModal.getFrom()));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailModal.getTo()));
+        MimeMultipart msg = new MimeMultipart("mixed");
+        setContent(emailModal,msg);
+        message.setContent(msg);
+        sendEmail(message);
+    }
+    private void setContent(EmailModal emailModal,MimeMultipart msg ) throws MessagingException {
         MimeBodyPart textPart = new MimeBodyPart();
-        textPart.setContent(BODY_TEXT, "text/plain; charset=UTF-8");
+        textPart.setContent(emailModal.getContent(), "text/plain; charset=UTF-8");
         MimeBodyPart htmlPart = new MimeBodyPart();
-        htmlPart.setContent(BODY_HTML,"text/html; charset=UTF-8");
+        htmlPart.setContent(emailModal.getTemplate(),"text/html; charset=UTF-8");
+        MimeMultipart msg_body = new MimeMultipart("mixed");
         msg_body.addBodyPart(textPart);
         msg_body.addBodyPart(htmlPart);
-        wrap.setContent(msg_body);
-        MimeMultipart msg = new MimeMultipart("mixed");
-        message.setContent(msg);
-        msg.addBodyPart(wrap);
-        MimeBodyPart att = new MimeBodyPart();
-        DataSource fds = new FileDataSource(ATTACHMENT);
-        att.setDataHandler(new DataHandler(fds));
-        att.setFileName(fds.getName());
-        msg.addBodyPart(att);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        message.writeTo(outputStream);
-        RawMessage rawMessage = new RawMessage(ByteBuffer.wrap(outputStream.toByteArray()));
-        SendRawEmailRequest rawEmailRequest = new SendRawEmailRequest(rawMessage);//.withConfigurationSetName(CONFIGURATION_SET);
-        amazonSimpleEmailService.sendRawEmail(rawEmailRequest);
-        log.info("Email sent!");
+        MimeBodyPart content = new MimeBodyPart();
+        content.setContent(msg_body);
+        msg.addBodyPart(content);
+        setAttachment(emailModal,msg);
+    }
+    private void setAttachment(EmailModal emailModal,MimeMultipart msg ){
+        try {
+            final String attachment = emailModal.getAttachment();
+            if (StringUtils.isNoneEmpty(attachment)) {
+                MimeBodyPart att = new MimeBodyPart();
+                DataSource fds = new FileDataSource(attachment);
+                att.setDataHandler(new DataHandler(fds));
+                att.setFileName(fds.getName());
+                msg.addBodyPart(att);
+            }
+        }catch (Exception ex){
+            log.error("Attachment Set Exception: ",ex);
+        }
+    }
+
+    private void sendEmail(final MimeMessage message){
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            message.writeTo(outputStream);
+            RawMessage rawMessage = new RawMessage(ByteBuffer.wrap(outputStream.toByteArray()));
+            SendRawEmailRequest rawEmailRequest = new SendRawEmailRequest(rawMessage);//.withConfigurationSetName(CONFIGURATION_SET);
+            amazonSimpleEmailService.sendRawEmail(rawEmailRequest);
+            log.info("Email sent!");
+        }catch (Exception ex){
+            log.error("Email Sent Exception: ",ex);
+        }
     }
 }
