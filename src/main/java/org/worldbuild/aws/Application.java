@@ -11,6 +11,9 @@ import org.worldbuild.aws.service.SnsService;
 import org.worldbuild.core.config.CoreConfiguration;
 import org.worldbuild.core.modal.EmailModal;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Log4j2
 @SpringBootApplication
 @Import({CoreConfiguration.class})
@@ -18,12 +21,10 @@ public class Application implements CommandLineRunner {
 	private static final String SENDER = "xyz@gmail.com";
 	private static final String RECIPIENT = "abc@gmail.com";
 	//
-	private static final String SUBJECT = "WB Sample Doc ";
+	private static final String SUBJECT = "Greetings From ISB";
 	private static final String ATTACHMENT = "/home/insight/Downloads/PaymentReceipt.pdf";
 
-	private static String BODY_TEXT = "Hello,\r\n"
-			+ "Please see the attached file for a list "
-			+ "of customers to contact.";
+	private static String BODY_TEXT = "Please see the attached file for a list of customers to contact.";
 
 	private static String BODY_HTML = "<html>"
 			+ "<head></head>"
@@ -52,9 +53,14 @@ public class Application implements CommandLineRunner {
 		emailModal.setTo(RECIPIENT);
 		emailModal.setSubject(SUBJECT);
 		emailModal.setContent(BODY_TEXT);
-		emailModal.setTemplate(BODY_HTML);
+		emailModal.setTemplateFilePath("email/general");
 		emailModal.setAttachment(ATTACHMENT);
-		//emailService.sendEmail(emailModal);
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("name", "Saurabh!");
+		model.put("location", "Delhi, India");
+		model.put("sign", "Saurabh Singh");
+		emailModal.setModal(model);
+		emailService.sendEmail(emailModal);
 		//snsService.publishToTopic("arn:aws:sns:ap-southeast-1:969695673397:MONGO_ALERT","AWS SNS Service testing");
 	}
 }
