@@ -4,7 +4,6 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.model.RawMessage;
 import com.amazonaws.services.simpleemail.model.SendRawEmailRequest;
 import com.amazonaws.services.simpleemail.model.SendRawEmailResult;
-import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.Template;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.worldbuild.core.modal.EmailModal;
@@ -30,12 +28,12 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
 
 @Log4j2
 @Service
@@ -50,8 +48,9 @@ public class EmailServiceImpl implements EmailService{
     @Qualifier("awsSimpleEmailService")
     private AmazonSimpleEmailService amazonSimpleEmailService;
 
+    @Async
     @Override
-    public void sendEmail(EmailModal emailModal) throws MessagingException {
+    public CompletableFuture<SendRawEmailResult> sendEmail(EmailModal emailModal) throws MessagingException {
         Session session = Session.getDefaultInstance(new Properties());
         MimeMessage message = new MimeMessage(session);
         message.setSubject(emailModal.getSubject(), "UTF-8");
@@ -60,8 +59,8 @@ public class EmailServiceImpl implements EmailService{
         MimeMultipart container = new MimeMultipart("mixed");
         setContent(emailModal,container);
         message.setContent(container);
-        sendEmail(message);
-        log.info("Email Sent");
+        SendRawEmailResult result = sendEmail(message);
+        return CompletableFuture.completedFuture(result);
     }
     private void setContent(EmailModal emailModal,MimeMultipart container ) throws MessagingException {
         MimeMultipart body = new MimeMultipart("mixed");
@@ -129,17 +128,18 @@ public class EmailServiceImpl implements EmailService{
         }
     }
 
-    @Async
-    private void sendEmail(final MimeMessage message){
+    public SendRawEmailResult  sendEmail(final MimeMessage message){
+        SendRawEmailResult result = null;
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             message.writeTo(outputStream);
             RawMessage rawMessage = new RawMessage(ByteBuffer.wrap(outputStream.toByteArray()));
             SendRawEmailRequest rawEmailRequest = new SendRawEmailRequest(rawMessage);//.withConfigurationSetName(CONFIGURATION_SET);
-            SendRawEmailResult result = amazonSimpleEmailService.sendRawEmail(rawEmailRequest);
+            result = amazonSimpleEmailService.sendRawEmail(rawEmailRequest);
             log.info("Email response: "+result);
         }catch (Exception ex){
             log.error("Email Sent Exception: ",ex);
         }
+        return result;
     }
 }

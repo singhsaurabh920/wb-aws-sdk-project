@@ -5,8 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.worldbuild.aws.service.EmailService;
+import org.worldbuild.aws.service.EmailServiceImpl;
 import org.worldbuild.aws.service.SnsService;
 import org.worldbuild.core.config.CoreConfiguration;
 import org.worldbuild.core.modal.EmailModal;
@@ -19,7 +24,7 @@ import java.util.Map;
 @Import({CoreConfiguration.class})
 public class Application implements CommandLineRunner {
 	private static final String SENDER = "xyz@gmail.com";
-	private static final String RECIPIENT = "abc@gmail.com";
+	private static final String RECIPIENT = "abc920@gmail.com";
 	//
 	private static final String SUBJECT = "Greetings From ISB";
 	private static final String ATTACHMENT = "/home/insight/Downloads/PaymentReceipt.pdf";
@@ -61,6 +66,7 @@ public class Application implements CommandLineRunner {
 		model.put("sign", "Saurabh Singh");
 		emailModal.setModal(model);
 		emailService.sendEmail(emailModal);
+		log.info("Email Sent");
 		//snsService.publishToTopic("arn:aws:sns:ap-southeast-1:969695673397:MONGO_ALERT","AWS SNS Service testing");
 	}
 }
