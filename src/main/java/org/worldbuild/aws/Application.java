@@ -22,23 +22,13 @@ import java.util.Map;
 @Log4j2
 @SpringBootApplication
 @Import({CoreConfiguration.class})
-public class Application implements CommandLineRunner {
-	private static final String SENDER = "xyz@gmail.com";
-	private static final String RECIPIENT = "abc920@gmail.com";
+public class Application implements CommandLineRunner  {
+	private static final String SENDER = "savitasinghkhanpur@gmail.com";
+	private static final String RECIPIENT = "singhsaurabh920@gmail.com";
 	//
 	private static final String SUBJECT = "Greetings From ISB";
 	private static final String ATTACHMENT = "/home/insight/Downloads/PaymentReceipt.pdf";
-
-	private static String BODY_TEXT = "Please see the attached file for a list of customers to contact.";
-
-	private static String BODY_HTML = "<html>"
-			+ "<head></head>"
-			+ "<body>"
-			+ "<h1>Hello!</h1>"
-			+ "<p>Please see the attached file for a "
-			+ "list of customers to contact.</p>"
-			+ "</body>"
-			+ "</html>";
+	private static final String TEXT_CONTENT = "Please see the attached file for a list of customers to contact.";
 
 	@Autowired
 	private SnsService snsService;
@@ -57,7 +47,7 @@ public class Application implements CommandLineRunner {
 		emailModal.setFrom(SENDER);
 		emailModal.setTo(RECIPIENT);
 		emailModal.setSubject(SUBJECT);
-		emailModal.setContent(BODY_TEXT);
+		emailModal.setContent(TEXT_CONTENT);
 		emailModal.setTemplateFilePath("email/general");
 		emailModal.setAttachment(ATTACHMENT);
 		Map<String, Object> model = new HashMap<String, Object>();
