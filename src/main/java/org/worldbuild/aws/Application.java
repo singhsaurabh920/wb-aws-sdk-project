@@ -23,8 +23,8 @@ import java.util.Map;
 @SpringBootApplication
 @Import({CoreConfiguration.class})
 public class Application implements CommandLineRunner  {
-	private static final String SENDER = "savitasinghkhanpur@gmail.com";
-	private static final String RECIPIENT = "singhsaurabh920@gmail.com";
+	private static final String SENDER = "xyz@gmail.com";
+	private static final String RECIPIENT = "abc@gmail.com";
 	//
 	private static final String SUBJECT = "Greetings From ISB";
 	private static final String ATTACHMENT = "/home/insight/Downloads/PaymentReceipt.pdf";
@@ -55,8 +55,7 @@ public class Application implements CommandLineRunner  {
 		model.put("location", "Delhi, India");
 		model.put("sign", "Saurabh Singh");
 		emailModal.setModal(model);
-		emailService.sendEmail(emailModal);
-		log.info("Email Sent");
+		//emailService.sendEmail(emailModal);
 		//snsService.publishToTopic("arn:aws:sns:ap-southeast-1:969695673397:MONGO_ALERT","AWS SNS Service testing");
 	}
 }
