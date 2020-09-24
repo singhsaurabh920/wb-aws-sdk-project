@@ -1,7 +1,9 @@
 package org.worldbuild.aws;
 
+import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,9 +18,13 @@ import org.worldbuild.aws.service.SnsService;
 import org.worldbuild.core.config.CoreConfiguration;
 import org.worldbuild.core.modal.EmailModal;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+@Data
 @Log4j2
 @SpringBootApplication
 @Import({CoreConfiguration.class})
@@ -34,6 +40,9 @@ public class Application implements CommandLineRunner  {
 	private SnsService snsService;
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	@Qualifier("scheduledExecutorService")
+	private ScheduledExecutorService scheduledExecutorService;
 
 	public static void main(String[] args) {
 		log.info("Application is initializing..........");
@@ -42,6 +51,7 @@ public class Application implements CommandLineRunner  {
 
 	@Override
 	public void run(String... args) throws Exception {
+		scheduledExecutorService.scheduleWithFixedDelay(()-> doJob(),10L,20L, TimeUnit.SECONDS);
 		log.info("Triggering init ..............");
 		EmailModal emailModal=new EmailModal();
 		emailModal.setFrom(SENDER);
@@ -58,4 +68,9 @@ public class Application implements CommandLineRunner  {
 		//emailService.sendEmail(emailModal);
 		//snsService.publishToTopic("arn:aws:sns:ap-southeast-1:969695673397:MONGO_ALERT","AWS SNS Service testing");
 	}
+
+	public void doJob() {
+		log.info("Current Time ===> {}",new Date());
+	}
+
 }
