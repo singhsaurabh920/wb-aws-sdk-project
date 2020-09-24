@@ -51,7 +51,7 @@ public class Application implements CommandLineRunner  {
 
 	@Override
 	public void run(String... args) throws Exception {
-		scheduledExecutorService.scheduleWithFixedDelay(()-> doJob(),10L,20L, TimeUnit.SECONDS);
+		scheduledExecutorService.scheduleWithFixedDelay(()-> doJob(),10L,10L, TimeUnit.SECONDS);
 		log.info("Triggering init ..............");
 		EmailModal emailModal=new EmailModal();
 		emailModal.setFrom(SENDER);
