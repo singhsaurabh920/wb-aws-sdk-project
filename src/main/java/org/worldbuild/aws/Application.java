@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -68,27 +69,13 @@ public class Application implements CommandLineRunner  {
 		log.info("Current Time ===> {}",new Date());
 	}
 
+	@Data
+	@ToString
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class DBCredential {
 		private String username;
 		private String password;
-
-		public String getUsername() {
-			return username;
-		}
-
-		public void setUsername(String username) {
-			this.username = username;
-		}
-
-		public String getPassword() {
-			return password;
-		}
-
-		public void setPassword(String password) {
-			this.password = password;
-		}
 	}
 
 }
