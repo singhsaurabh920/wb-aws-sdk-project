@@ -31,7 +31,6 @@ public class SdkConfiguration {
         AWSCredentialsProvider awsCredentialsProvider=new AWSStaticCredentialsProvider(basicAwsCredentials);*/
         return  AmazonSNSClientBuilder
                 .standard()
-                .withRegion(AWS_REGION)
                 .build();
     }
 
@@ -40,7 +39,6 @@ public class SdkConfiguration {
     public AmazonSNS amazonSNSProd(){
         return AmazonSNSClient
                 .builder()
-                .withRegion(AWS_REGION)
                 .withCredentials(new InstanceProfileCredentialsProvider(true))
                 .build();
     }
@@ -49,7 +47,6 @@ public class SdkConfiguration {
     public AWSSecretsManager awsSecretsManager() {
         return AWSSecretsManagerClientBuilder
                 .standard()
-                .withRegion(AWS_REGION)
                 .build();
     }
 
@@ -57,7 +54,7 @@ public class SdkConfiguration {
     public AmazonSimpleEmailService awsSimpleEmailService() {
         return AmazonSimpleEmailServiceClientBuilder
                 .standard()
-                .withRegion(AWS_REGION)
+                //.withRegion(AWS_REGION)
                 .build();
 
     }
