@@ -5,6 +5,6 @@ spring:
       host: localhost
       port: 27017
       database: gps
-      username: application
-      password: gps@application
+      username: wistoreuser
+      password: wistoreuser@123456
       authentication-database: gps
