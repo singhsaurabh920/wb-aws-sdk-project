@@ -14,7 +14,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.worldbuild.aws.service.EmailService;
 import org.worldbuild.aws.service.EmailServiceImpl;
+import org.worldbuild.aws.service.SecretsManagerService;
 import org.worldbuild.aws.service.SnsService;
+import org.worldbuild.aws.utils.AWSUtils;
 import org.worldbuild.core.config.CoreConfiguration;
 import org.worldbuild.core.modal.EmailModal;
 
@@ -29,17 +31,13 @@ import java.util.concurrent.TimeUnit;
 @SpringBootApplication
 @Import({CoreConfiguration.class})
 public class Application implements CommandLineRunner  {
-	private static final String SENDER = "xyz@gmail.com";
-	private static final String RECIPIENT = "abc@gmail.com";
-	//
-	private static final String SUBJECT = "Greetings From ISB";
-	private static final String ATTACHMENT = "/home/insight/Downloads/PaymentReceipt.pdf";
-	private static final String TEXT_CONTENT = "Please see the attached file for a list of customers to contact.";
 
 	@Autowired
 	private SnsService snsService;
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	private SecretsManagerService secretsManagerService;
 	@Autowired
 	@Qualifier("scheduledExecutorService")
 	private ScheduledExecutorService scheduledExecutorService;
@@ -51,22 +49,11 @@ public class Application implements CommandLineRunner  {
 
 	@Override
 	public void run(String... args) throws Exception {
-		scheduledExecutorService.scheduleWithFixedDelay(()-> doJob(),10L,10L, TimeUnit.SECONDS);
 		log.info("Triggering init ..............");
-		EmailModal emailModal=new EmailModal();
-		emailModal.setFrom(SENDER);
-		emailModal.setTo(RECIPIENT);
-		emailModal.setSubject(SUBJECT);
-		emailModal.setContent(TEXT_CONTENT);
-		emailModal.setTemplateFilePath("email/general");
-		emailModal.setAttachment(ATTACHMENT);
-		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("name", "Saurabh!");
-		model.put("location", "Delhi, India");
-		model.put("sign", "Saurabh Singh");
-		emailModal.setModal(model);
-		//emailService.sendEmail(emailModal);
-		//snsService.publishToTopic("arn:aws:sns:ap-southeast-1:969695673397:MONGO_ALERT","AWS SNS Service testing");
+		secretsManagerService.getAwsSecret("spring.data.mongodb");
+		//scheduledExecutorService.scheduleWithFixedDelay(()-> doJob(),10L,10L, TimeUnit.SECONDS);
+		//emailService.sendEmail(AWSUtils.sendSampleEmail());
+		//snsService.publishToTopic(AWSUtils.SNS_ARN,"AWS SNS Service testing");
 	}
 
 	public void doJob() {

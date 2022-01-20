@@ -1,0 +1,10 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/gps
+      host: localhost
+      port: 27017
+      database: gps
+      username: application
+      password: gps@application
+      authentication-database: gps
