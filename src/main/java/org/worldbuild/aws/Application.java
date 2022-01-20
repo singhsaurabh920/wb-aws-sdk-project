@@ -57,7 +57,7 @@ public class Application implements CommandLineRunner  {
 		log.info("Triggering init ..............");
 		secretsManagerService.getAwsSecret("spring.data.mongodb.database");
 		String secret = secretsManagerService.getAwsSecret("spring.data.mongodb");
-		DBCredential dbCredential = objectMapper.convertValue(secret,DBCredential.class);
+		DBCredential dbCredential = objectMapper.readValue(secret,DBCredential.class);
 		log.info(dbCredential);
 		//scheduledExecutorService.scheduleWithFixedDelay(()-> doJob(),10L,10L, TimeUnit.SECONDS);
 		//emailService.sendEmail(AWSUtils.sendSampleEmail());
