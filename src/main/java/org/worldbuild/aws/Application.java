@@ -51,6 +51,7 @@ public class Application implements CommandLineRunner  {
 	public void run(String... args) throws Exception {
 		log.info("Triggering init ..............");
 		secretsManagerService.getAwsSecret("spring.data.mongodb");
+		secretsManagerService.getAwsSecret("spring.data.mongodb.database");
 		//scheduledExecutorService.scheduleWithFixedDelay(()-> doJob(),10L,10L, TimeUnit.SECONDS);
 		//emailService.sendEmail(AWSUtils.sendSampleEmail());
 		//snsService.publishToTopic(AWSUtils.SNS_ARN,"AWS SNS Service testing");
