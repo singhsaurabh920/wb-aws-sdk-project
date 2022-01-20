@@ -8,10 +8,12 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.SpringDataMongoDB;
@@ -34,6 +36,9 @@ import static java.util.Arrays.asList;
 @EnableMongoRepositories(basePackages = "org.company.gps.core.domain.repo")
 public class MongoConfig extends AbstractMongoClientConfiguration {
 
+    @Autowired
+    private Environment env;
+
     private static final String UTF_8 = "UTF-8";
     private static final String MONGODB_PREFIX = "mongodb://";
     private static final String MONGODB_SRV_PREFIX = "mongodb+srv://";
@@ -47,20 +52,22 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Bean
     public MongoClient mongoClient() {
+        String username = env.getProperty("spring.data.mongodb.username");
+        String password = env.getProperty("spring.data.mongodb.password");
         log.info("Primary MongoClient initialized");
         log.info("Mongo Host {} ", mongoProperties.getHost());
         log.info("Mongo Port {} ", mongoProperties.getPort());
-        log.info("Mongo Username {} ", mongoProperties.getUsername());
-        log.info("Mongo Password {} ", mongoProperties.getPassword());
+        log.info("Mongo Username {} ", username);
+        log.info("Mongo Password {} ", password);
         log.info("Mongo Database {} ", mongoProperties.getDatabase());
         log.info("Mongo Authentication Database {} ", mongoProperties.getAuthenticationDatabase());
         ConnectionString connectionString = new ConnectionString(MONGODB_PREFIX + mongoProperties.getHost() + ":" + mongoProperties.getPort());
         log.info("Mongo Uri {}", connectionString);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
-                .credential(MongoCredential.createCredential(mongoProperties.getUsername(),
+                .credential(MongoCredential.createCredential(username,
                         mongoProperties.getDatabase(),
-                        mongoProperties.getPassword()))
+                        password.toCharArray()))
                 .build();
         return MongoClients.create(mongoClientSettings, SpringDataMongoDB.driverInformation());
     }
