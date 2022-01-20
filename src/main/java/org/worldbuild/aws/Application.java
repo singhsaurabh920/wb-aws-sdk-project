@@ -68,12 +68,19 @@ public class Application implements CommandLineRunner  {
 		log.info("Current Time ===> {}",new Date());
 	}
 
-	@Data
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class DBCredential {
 		private String username;
 		private String password;
+
+		public String getUsername() {
+			return username;
+		}
+
+		public void setUsername(String username) {
+			this.username = username;
+		}
 	}
 
 }
