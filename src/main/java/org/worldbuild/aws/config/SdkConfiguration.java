@@ -24,7 +24,7 @@ public class SdkConfiguration {
     public static final String AWS_SECRET = "prod/gps/db";
     public static final String AWS_REGION = "eu-west-1";
 
-    @Profile("dev")
+    @Profile({"dev","qa"})
     @Bean("amazonSNS")
     public AmazonSNS amazonSNSDev(){
         /*BasicAWSCredentials basicAwsCredentials = new BasicAWSCredentials("accessKey","secretKey");
