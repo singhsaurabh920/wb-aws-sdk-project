@@ -1,5 +1,6 @@
 package org.worldbuild.aws;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 public class Application implements CommandLineRunner  {
 
 	@Autowired
+	private ObjectMapper objectMapper;
+	@Autowired
 	private SnsService snsService;
 	@Autowired
 	private EmailService emailService;
@@ -50,8 +53,10 @@ public class Application implements CommandLineRunner  {
 	@Override
 	public void run(String... args) throws Exception {
 		log.info("Triggering init ..............");
-		secretsManagerService.getAwsSecret("spring.data.mongodb");
 		secretsManagerService.getAwsSecret("spring.data.mongodb.database");
+		String secret = secretsManagerService.getAwsSecret("spring.data.mongodb");
+		DBCredential dbCredential = objectMapper.convertValue(secret,DBCredential.class);
+		log.info(dbCredential);
 		//scheduledExecutorService.scheduleWithFixedDelay(()-> doJob(),10L,10L, TimeUnit.SECONDS);
 		//emailService.sendEmail(AWSUtils.sendSampleEmail());
 		//snsService.publishToTopic(AWSUtils.SNS_ARN,"AWS SNS Service testing");
@@ -59,6 +64,12 @@ public class Application implements CommandLineRunner  {
 
 	public void doJob() {
 		log.info("Current Time ===> {}",new Date());
+	}
+
+	@Data
+	public static class DBCredential {
+		private String username;
+		private String password;
 	}
 
 }
