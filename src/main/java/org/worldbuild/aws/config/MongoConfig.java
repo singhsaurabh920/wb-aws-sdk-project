@@ -52,6 +52,8 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Bean
     public MongoClient mongoClient() {
+        String testSecret=env.getProperty("test.secret");
+        log.info("Test property {}",testSecret);
         String username = env.getProperty("spring.data.mongodb.username");
         String password = env.getProperty("spring.data.mongodb.password");
         log.info("Primary MongoClient initialized");
