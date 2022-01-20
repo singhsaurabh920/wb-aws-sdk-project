@@ -25,6 +25,7 @@ public class SecretsManagerServiceImpl implements SecretsManagerService {
         GetSecretValueResult getSecretValueResult = null;
         try {
             getSecretValueResult = awsSecretsManager.getSecretValue(getSecretValueRequest);
+            log.info(getSecretValueResult);
         } catch (Exception e){
             log.error("SecretsManager exception - ",e);
         }
